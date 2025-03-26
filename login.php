@@ -1,6 +1,6 @@
 <?php
 session_start();
-require '../database/database.php'; // Include database connection
+require 'database.php'; // Include database connection
 $pdo = Database::connect();
 
 $error = '';
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     // Close connection
                     Database::disconnect();
 
-                    header("Location: issues_list.php");
+                    header("Location: issuesList.php");
                     exit();
                 } else {
                     $error = "Invalid email or password.";
