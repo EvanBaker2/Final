@@ -62,7 +62,10 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         <!-- "+" Button to Add Issue -->
         <div class="d-flex justify-content-between align-items-center mt-3">
             <h3>All Issues</h3>
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addIssueModal">+</button>
+             <div>
+        <a href="person.php" class="btn btn-primary me-2">View Persons</a>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addIssueModal">+ Add Issue</button>
+    </div>
         </div>
 
         <table class="table table-striped table-sm mt-2">
