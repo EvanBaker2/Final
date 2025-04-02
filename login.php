@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'database.php'; // Include database connection
+require '../database/database.php'; // Include database connection
 $pdo = Database::connect();
 
 $error = '';

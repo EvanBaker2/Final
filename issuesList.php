@@ -1,12 +1,12 @@
 <?php
 session_start();
-require '../database/database.php'; // Database connection
+require 'database.php'; // Database connection
 
 $pdo = Database::connect();
 $error_message = "";
 
 // Fetch persons for dropdown list
-$persons_sql = "SELECT id, fname, lname FROM dsr_persons ORDER BY lname ASC";
+$persons_sql = "SELECT id, fname, lname FROM iss_persons ORDER BY lname ASC";
 $persons_stmt = $pdo->query($persons_sql);
 $persons = $persons_stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -92,6 +92,9 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                             <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#readIssue<?= $issue['id']; ?>">R</button>
                             <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#updateIssue<?= $issue['id']; ?>">U</button>
                             <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteIssue<?= $issue['id']; ?>">D</button>
+
+                             <!-- View Comments Button -->
+                             <a href="comments.php?issue_id=<?= $issue['id']; ?>" class="btn btn-secondary btn-sm">View Comments</a>
                         </td>
                     </tr>
 
