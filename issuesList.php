@@ -173,26 +173,41 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                     </div>
 
                     <!-- Update Modal -->
-                    <div class="modal fade" id="updateIssue<?= $issue['id']; ?>" tabindex="-1">
+                     <div class="modal fade" id="updateIssue<?= $issue['id']; ?>" tabindex="-1">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">Update Issue</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form method="POST">
-                                        <input type="hidden" name="id" value="<?= $issue['id']; ?>">
-                                        <input type="text" name="short_description" class="form-control mb-2" value="<?= htmlspecialchars($issue['short_description']); ?>" required>
-                                        <textarea name="long_description" class="form-control mb-2"><?= htmlspecialchars($issue['long_description']); ?></textarea>
-                                        <input type="date" name="open_date" class="form-control mb-2" value="<?= $issue['open_date']; ?>" required>
-                                        <input type="date" name="close_date" class="form-control mb-2" value="<?= $issue['close_date']; ?>">
-                                        <button type="submit" name="update_issue" class="btn btn-primary">Save Changes</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                <h5 class="modal-title">Update Issue</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST">
+                    <input type="hidden" name="id" value="<?= $issue['id']; ?>">
+                    <input type="text" name="short_description" class="form-control mb-2" value="<?= htmlspecialchars($issue['short_description']); ?>" required>
+                    <textarea name="long_description" class="form-control mb-2"><?= htmlspecialchars($issue['long_description']); ?></textarea>
+                    <input type="date" name="open_date" class="form-control mb-2" value="<?= $issue['open_date']; ?>" required>
+                    <input type="date" name="close_date" class="form-control mb-2" value="<?= $issue['close_date']; ?>">
+
+                    <!-- Reordered fields -->
+                    <input type="text" name="priority" class="form-control mb-2" value="<?= htmlspecialchars($issue['priority']); ?>" placeholder="Priority">
+                    <input type="text" name="org" class="form-control mb-2" value="<?= htmlspecialchars($issue['org']); ?>" placeholder="Organization">
+                    <input type="text" name="project" class="form-control mb-2" value="<?= htmlspecialchars($issue['project']); ?>" placeholder="Project">
+
+                    <select name="per_id" class="form-control mb-2" required>
+                        <?php foreach ($persons as $person) : ?>
+                            <option value="<?= $person['id']; ?>" <?= ($issue['per_id'] == $person['id']) ? 'selected' : ''; ?>>
+                                <?= htmlspecialchars($person['fname'] . ' ' . $person['lname']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+
+                    <!-- Save changes button moved to correct position -->
+                    <button type="submit" name="update_issue" class="btn btn-primary mt-3">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
                     <!-- Delete Modal -->
                     <div class="modal fade" id="deleteIssue<?= $issue['id']; ?>" tabindex="-1">
