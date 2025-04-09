@@ -40,6 +40,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header("Location: issues_list.php");
         exit();
     }
+
+     if (isset($_POST['add_issue'])) {
+        $short_description = trim($_POST['short_description']);
+        $long_description = trim($_POST['long_description']);
+        $open_date = $_POST['open_date'];
+        $close_date = $_POST['close_date'];
+        $priority = $_POST['priority'];
+        $org = trim($_POST['org']);
+        $project = trim($_POST['project']);
+        $per_id = $_POST['per_id'];
+    
+        $sql = "INSERT INTO iss_issues (short_description, long_description, open_date, close_date, priority, org, project, per_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$short_description, $long_description, $open_date, $close_date, $priority, $org, $project, $per_id]);
+    
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    }
+    
 }
 
 // Fetch all issues
@@ -55,6 +75,42 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     <title>Issues List - DSR</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
+    <!-- Add Issue Modal -->
+<div class="modal fade" id="addIssueModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="<?= htmlspecialchars($_SERVER['PHP_SELF']); ?>">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">Add New Issue</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" name="short_description" class="form-control mb-2" placeholder="Short Description" required>
+                    <textarea name="long_description" class="form-control mb-2" placeholder="Long Description"></textarea>
+                    <input type="date" name="open_date" class="form-control mb-2" required>
+                    <input type="date" name="close_date" class="form-control mb-2">
+                    <input type="text" name="priority" class="form-control mb-2" placeholder="Priority">
+                    <input type="text" name="org" class="form-control mb-2" placeholder="Organization">
+                    <input type="text" name="project" class="form-control mb-2" placeholder="Project">
+                    <select name="per_id" class="form-control mb-2" required>
+                        <option value="">Assign to...</option>
+                        <?php foreach ($persons as $person) : ?>
+                            <option value="<?= $person['id']; ?>">
+                                <?= htmlspecialchars($person['fname'] . ' ' . $person['lname']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" name="add_issue" class="btn btn-success">Add Issue</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+    
 <body>
     <div class="container mt-3">
         <h2 class="text-center">Issues List</h2>
