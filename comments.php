@@ -149,6 +149,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </tbody>
         </table>
 
+ <a href="issuesList.php" class="btn btn-secondary mb-3">← Back to Issues List</a>
+
                 <!-- Add Comment Button -->
 <div class="text-end mb-3">
     <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCommentModal">Add Comment</button>
