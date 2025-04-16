@@ -12,6 +12,39 @@ $persons = $persons_stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Handle issue operations (Update, Delete)
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+      // echo "this is a test of file uploads" ; print_r($_FILES); exit(); // checkpoint
+     if($_FILES['pdf_attachment']['size'] > 0) {
+
+        $fileTmpPath = $_FILES['pdf_attachment']['tmp_name'];
+        $fileName    = $_FILES['pdf_attachment']['name'];
+        $fileSize    = $_FILES['pdf_attachment']['size'];
+        $fileType    = $_FILES['pdf_attachment']['type'];
+        $fileNameCmps = explode(".", $fileName);
+        $fileExtension = strtolower(end($fileNameCmps));
+
+        if($fileExtension !== 'pdf') {
+            die("Only PDF files allowed");
+        }
+        if($fileSize > 2 * 1024 * 1024) {
+            die("File size exceeds 2MB limit");
+        }
+
+        $newFileName = MD5(time() . $fileName) . '.' . $fileExtension;
+        $uploadFileDir = './uploads/';
+        $dest_path = $uploadFileDir . $newFileName;
+        // if uploads directory does not exist, create it
+        if(!is_dir($uploadFileDir)) {
+            mkdir($uploadFileDir, 0755, true);
+        }
+
+        if (move_uploaded_file($fileTmpPath, $dest_path)) {
+            $attachmentPath = $dest_path;
+        } else {
+            die("error moving file");
+        }
+
+    } // end pdf attachment
+    
     if (isset($_POST['update_issue'])) {
         $id = $_POST['id'];
         $short_description = trim($_POST['short_description']);
@@ -80,7 +113,7 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 <div class="modal fade" id="addIssueModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="POST" action="<?= htmlspecialchars($_SERVER['PHP_SELF']); ?>">
+            <form method="POST" enctype="multipart/form-data" action="<?= htmlspecialchars($_SERVER['PHP_SELF']); ?>">
                 <div class="modal-header bg-success text-white">
                     <h5 class="modal-title">Add New Issue</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -110,6 +143,13 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 </div>
+
+    <form>
+<label for="pdf_attachment">PDF</label>
+    <input type="file" name="pdf_attachment" class="form-control mb-2"
+                accept="application/pdf" />
+
+                        </form>
     
 <body>
     <div class="container mt-3">
